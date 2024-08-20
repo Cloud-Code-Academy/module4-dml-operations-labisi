@@ -17,7 +17,7 @@
  * The methods within this class serve as practical examples of different DML operations,
  * allowing developers to learn through practice and examples.
  *
- * @author Your Name
+ * @author olabisi aruna
  */
 
 
@@ -31,13 +31,15 @@ public with sharing class DMLOperations {
      */
     public static Id insertNewAccount() {
         // Create a new Account instance
-
+            Account acc = new Account();
         // Set some fields on the Account
-
+           acc.Name = 'Cloud Code Mod4';
+           acc.BillingCity = 'Toronto';
+           acc.NumberOfEmployees = 50;
         // Insert the Account into the database
-
+           Insert acc;
         // Return the Id of the newly created Account
-        return null;
+        return acc.Id;
     }
 
     /**
@@ -48,8 +50,9 @@ public with sharing class DMLOperations {
      */
     public static void createAccount(String name, String industry) {
         // Create a new Account and set the fields inline
-
+           Account acc2 = new Account(Name = name, Industry = industry);
         // Insert the Account
+         Insert acc2;
     }
 
     
@@ -61,14 +64,17 @@ public with sharing class DMLOperations {
      */
     public static Id insertNewContact(Id accountId) {
         // Create a new Contact instance
-
+           Contact con = new Contact();
         // Set some fields on the Contact
+           con.LastName = 'Su';
+           con.Phone = '147852963';
+           con.Department = 'Procurement';
         // Set the AccountId field to the given accountId
-
+            con.AccountId = accountId;
         // Insert the Contact into the database
-
+           insert con;
         // Return the Id of the newly created Contact
-        return null;
+        return con.Id;
     }
 
     /**
@@ -80,11 +86,12 @@ public with sharing class DMLOperations {
      */
     public static void updateContactLastName(Id contactId, String newLastName) {
         // Retrieve the Contact from the database
-        // [SELECT Id FROM Contact WHERE Id = :contactId]
-
+         List <Contact> conToUpdate = [SELECT Id FROM Contact WHERE Id = :contactId];
+         contact cont = conToUpdate[0];
         // Update the Contact's last name
-
+        cont.LastName = newLastName;
         // Update the Contact in the database
+         Update cont;
     }
 
     /**
