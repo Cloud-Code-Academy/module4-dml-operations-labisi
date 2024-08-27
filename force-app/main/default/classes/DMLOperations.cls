@@ -228,10 +228,37 @@ public with sharing class DMLOperations {
 	 * @param contactsToUpsert List of Contacts to be upserted and linked to accounts.
 	 */
 	public static void upsertAccountsWithContacts(List<Contact> contactsToUpsert) {
-       for (Contact con : contactsToUpsert) {
-           
-       }
-        upsert contactsToUpsert;
+        Set<String> lastNames = new Set<String>();
+        for (Contact con : contactsToUpsert) {
+            lastNames.add(con.LastName);
+        }
+        Map<String, Account> accountMap = new Map<String, Account>();
+        for (Account a  : [SELECT Id, Name FROM Account where Name IN :lastNames]) {
+            accountMap.put(a.Name, a);
+        }
+        List<Account> accountsToUpsert = new List<Account>();
+        for (Contact con : contactsToUpsert) {
+            Account matchingAccount = accountMap.get(con.LastName);
+            if (matchingAccount != null) {
+                con.AccountId = matchingAccount.Id;
+            } else {
+                Account acc = new Account(Name = con.LastName);
+                accountsToUpsert.add(acc);
+                accountMap.put(con.LastName, acc);
+              
+            }
+            }
+            upsert accountsToUpsert;
+            for (Account acct : accountsToUpsert) {
+                for (Contact contact : contactsToUpsert) {
+                    if (contact.LastName == acct.Name && contact.AccountId == null) {
+                        contact.AccountId = acct.Id;
+                    }
+                }
+            }
+            upsert contactsToUpsert;
+        }
+        
         // Loop through each Contact
 
 		// Extract the Account Name from Contact's LastName
@@ -241,7 +268,7 @@ public with sharing class DMLOperations {
 		// Link the Contact to its Account using the Account Id
 
 		// Upsert the Contacts
-	}
+	
 
     /**
      * Question 11
