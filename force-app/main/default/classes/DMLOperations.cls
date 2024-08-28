@@ -169,14 +169,14 @@ public with sharing class DMLOperations {
         }
         Account acct = acc[0];
         List<Opportunity> existingOpportunities = [SELECT Id, Name, AccountId FROM Opportunity WHERE Name IN :oppNames AND AccountId = :acct.Id];
-        List <Opportunity> oppList = new List <Opportunity>();
+       List <Opportunity> oppList = new List <Opportunity>();
         for (String oppName : oppNames) {
             Opportunity opp = new Opportunity();
         for (Opportunity existingOpp : existingOpportunities) {
             if (existingOpp.Name == oppName) {
                 opp = existingOpp;
                 break;
-            }
+           }
         }
         opp.Name = oppName;
         opp.AccountId = acct.Id;
@@ -258,15 +258,12 @@ public with sharing class DMLOperations {
             }
             upsert contactsToUpsert;
         }
+    
         
         // Loop through each Contact
-
 		// Extract the Account Name from Contact's LastName
-
 		// Get the account based on the name or create one if it doesn't exist
-
 		// Link the Contact to its Account using the Account Id
-
 		// Upsert the Contacts
 	
 
